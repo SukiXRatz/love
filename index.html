@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💕 A Special Question For You 💕</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>NokoStoreBot - Telegram Mini App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ============================================
-           ROOT VARIABLES - Color Palette
-           ============================================ */
         :root {
-            --primary-pink: #ff6b9d;
-            --secondary-pink: #ff8fab;
-            --light-pink: #ffc2d1;
-            --cream: #fff5f7;
-            --deep-rose: #c9184a;
-            --gold: #ffd700;
-            --soft-purple: #e0aaff;
-            --romantic-red: #ff4d6d;
-            --bg-gradient-1: #ffafbd;
-            --bg-gradient-2: #ffc3a0;
-            --text-dark: #4a2040;
+            --tg-blue: #2AABEE;
+            --tg-blue-dark: #229ED9;
+            --tg-green: #4FAE4E;
+            --tg-red: #E53935;
+            --tg-orange: #FF9500;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F0F2F5;
+            --bg-chat: #E6EBF0;
+            --text-primary: #000000;
+            --text-secondary: #707579;
+            --text-link: #3390EC;
+            --border-color: #E6E6E6;
+            --bubble-out: #EFFDDE;
+            --bubble-in: #FFFFFF;
         }
 
-        /* ============================================
-           RESET & BASE STYLES
-           ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -33,943 +33,1827 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            overflow-y: hidden; /* Lock scroll for app-like feel */
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+        }
+
+        /* Telegram Header */
+        .tg-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tg-header-content {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .bot-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--tg-blue), var(--tg-blue-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bot-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bot-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-badge {
+            width: 18px;
+            height: 18px;
+            background: var(--tg-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bot-status {
+            font-size: 14px;
+            color: var(--tg-green);
+            font-weight: 500;
+        }
+
+        .bot-status.offline {
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            min-height: calc(100vh - 68px);
+        }
+
+        /* Bot Profile Section */
+        .bot-profile {
+            padding: 24px 20px;
+            text-align: center;
+            border-bottom: 8px solid var(--bg-secondary);
+        }
+
+        .bot-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--tg-blue), var(--tg-blue-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+        }
+
+        .bot-name-large {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .bot-username {
+            color: var(--text-link);
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .bot-bio {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.5;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 8px 0;
+            border-bottom: 8px solid var(--bg-secondary);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            gap: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .menu-item:active {
+            background: var(--bg-chat);
+        }
+
+        .menu-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .menu-icon.blue { background: #E3F2FD; color: var(--tg-blue); }
+        .menu-icon.green { background: #E8F5E9; color: var(--tg-green); }
+        .menu-icon.orange { background: #FFF3E0; color: var(--tg-orange); }
+        .menu-icon.red { background: #FFEBEE; color: var(--tg-red); }
+        .menu-icon.purple { background: #F3E5F5; color: #9C27B0; }
+
+        .menu-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .menu-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .menu-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .menu-arrow {
+            color: var(--text-secondary);
+        }
+
+        .menu-badge {
+            background: var(--tg-red);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-tg {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-tg-primary {
+            background: var(--tg-blue);
+            color: white;
+        }
+
+        .btn-tg-primary:hover {
+            background: var(--tg-blue-dark);
+        }
+
+        .btn-tg-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-tg-secondary {
+            background: var(--bg-secondary);
+            color: var(--tg-blue);
+        }
+
+        .btn-tg-secondary:hover {
+            background: var(--bg-chat);
+        }
+
+        /* Inline Keyboard */
+        .inline-keyboard {
+            padding: 8px 16px;
+            background: var(--bg-primary);
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .keyboard-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .keyboard-btn-default {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .keyboard-btn-default:hover {
+            background: var(--bg-chat);
+        }
+
+        .keyboard-btn-primary {
+            background: var(--tg-blue);
+            color: white;
+        }
+
+        .keyboard-btn-primary:hover {
+            background: var(--tg-blue-dark);
+        }
+
+        .keyboard-btn-success {
+            background: var(--tg-green);
+            color: white;
+        }
+
+        .keyboard-btn-danger {
+            background: var(--tg-red);
+            color: white;
+        }
+
+        /* Chat Bubbles */
+        .chat-section {
+            padding: 16px;
+            background: var(--bg-chat);
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.4;
             position: relative;
-            touch-action: none; /* Prevent default browser behaviors */
         }
 
-        /* ============================================
-           ANIMATED BACKGROUND LAYER
-           ============================================ */
-        .background-layer {
+        .bubble-bot {
+            background: var(--bubble-in);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+
+        .bubble-user {
+            background: var(--bubble-out);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+
+        .bubble-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            float: right;
+            margin-left: 8px;
+            margin-top: 4px;
+        }
+
+        /* Service Cards */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .service-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .service-card:hover {
+            border-color: var(--tg-blue);
+            box-shadow: 0 2px 8px rgba(42, 171, 238, 0.15);
+        }
+
+        .service-card:active {
+            transform: scale(0.98);
+        }
+
+        .service-card.selected {
+            border-color: var(--tg-blue);
+            background: #E3F2FD;
+        }
+
+        .service-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 20px;
+        }
+
+        .service-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-price {
+            font-size: 12px;
+            color: var(--tg-green);
+            font-weight: 500;
+        }
+
+        .service-stock {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Modal */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .gradient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            animation: orbFloat 20s ease-in-out infinite;
-        }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 107, 157, 0.4) 0%, transparent 70%);
-            top: -200px;
-            left: -200px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 143, 171, 0.3) 0%, transparent 70%);
-            bottom: -150px;
-            right: -150px;
-            animation-delay: -5s;
-            animation-duration: 25s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(224, 170, 255, 0.3) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -10s;
-            animation-duration: 30s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(50px, -50px) scale(1.1);
-            }
-            50% {
-                transform: translate(-30px, 30px) scale(0.9);
-            }
-            75% {
-                transform: translate(-50px, -30px) scale(1.05);
-            }
-        }
-
-        /* ============================================
-           STARFIELD BACKGROUND
-           ============================================ */
-        .stars-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-        }
-
-        @keyframes twinkle {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        /* ============================================
-           FLOATING HEARTS CONTAINER
-           ============================================ */
-        .hearts-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .floating-heart {
-            position: absolute;
-            font-size: var(--size);
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1000;
             opacity: 0;
-            animation: floatUp var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-            color: var(--heart-color);
-            text-shadow: 0 0 10px currentColor;
+            visibility: hidden;
+            transition: all 0.3s;
         }
 
-        @keyframes floatUp {
-            0% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(0deg) scale(0.5);
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-100px) rotate(360deg) scale(1);
-            }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        /* ============================================
-           SPARKLE EFFECTS
-           ============================================ */
-        .sparkle-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 16px 16px 0 0;
             width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-            overflow: hidden;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s;
         }
 
-        .sparkle {
-            position: absolute;
-            width: 4px;
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 36px;
             height: 4px;
-            background: white;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin: 12px auto;
+        }
+
+        .modal-header {
+            padding: 8px 20px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 16px 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: var(--bg-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tg-blue);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--bg-primary);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23707579' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--tg-blue);
+        }
+
+        /* Country List */
+        .country-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .country-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .country-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .country-item.selected {
+            background: #E3F2FD;
+        }
+
+        .country-flag {
+            font-size: 24px;
+        }
+
+        .country-info {
+            flex: 1;
+        }
+
+        .country-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .country-code {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .country-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tg-green);
+        }
+
+        /* Order Status */
+        .order-status {
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .status-value {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .status-value.success {
+            color: var(--tg-green);
+        }
+
+        .status-value.pending {
+            color: var(--tg-orange);
+        }
+
+        /* OTP Display */
+        .otp-display {
+            background: linear-gradient(135deg, var(--tg-blue), var(--tg-blue-dark));
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .otp-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .otp-code {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .otp-timer {
+            font-size: 13px;
+            margin-top: 12px;
+            opacity: 0.9;
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #1E3A5F, #0D2137);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 16px;
+            color: white;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 8px 0 16px;
+        }
+
+        .balance-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .balance-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .balance-btn-deposit {
+            background: var(--tg-green);
+            color: white;
+        }
+
+        .balance-btn-history {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        /* Transaction History */
+        .transaction-list {
+            padding: 0 16px 16px;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            animation: sparkleAnim var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-            box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @keyframes sparkleAnim {
-            0%, 100% {
-                opacity: 0;
-                transform: scale(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .transaction-icon.in {
+            background: #E8F5E9;
+            color: var(--tg-green);
         }
 
-        /* ============================================
-           MAIN CONTENT WRAPPER
-           ============================================ */
-        .main-wrapper {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
+        .transaction-icon.out {
+            background: #FFEBEE;
+            color: var(--tg-red);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .transaction-amount.positive {
+            color: var(--tg-green);
+        }
+
+        .transaction-amount.negative {
+            color: var(--tg-red);
+        }
+
+        /* Section Title */
+        .section-header {
+            padding: 16px 20px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #323232;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 8px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
         }
 
-        /* ============================================
-           DECORATIVE BORDER FRAME
-           ============================================ */
-        .decorative-frame {
-            position: relative;
-            max-width: 800px;
-            width: 100%;
-            padding: 60px 40px;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(255, 107, 157, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            animation: frameGlow 4s ease-in-out infinite;
-            overflow: hidden;
+        .nav-item.active {
+            color: var(--tg-blue);
         }
 
-        @keyframes frameGlow {
-            0%, 100% {
-                box-shadow: 
-                    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                    0 0 100px rgba(255, 107, 157, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            }
-            50% {
-                box-shadow: 
-                    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                    0 0 150px rgba(255, 107, 157, 0.4),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            }
+        .nav-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 500;
         }
 
-        /* Corner decorations */
-        .corner-decoration {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            pointer-events: none;
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        .corner-decoration svg {
-            width: 100%;
-            height: 100%;
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        .corner-top-left { top: -1px; left: -1px; }
-        .corner-top-right { top: -1px; right: -1px; transform: scaleX(-1); }
-        .corner-bottom-left { bottom: -1px; left: -1px; transform: scaleY(-1); }
-        .corner-bottom-right { bottom: -1px; right: -1px; transform: scale(-1, -1); }
-
-        /* ============================================
-           HEART ICON ANIMATION
-           ============================================ */
-        .main-heart-container {
-            margin-bottom: 30px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .main-heart {
-            font-size: 100px;
-            color: var(--romantic-red);
-            animation: heartBeat 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(255, 77, 109, 0.6));
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            10% { transform: scale(1.1); }
-            20% { transform: scale(1); }
-            30% { transform: scale(1.15); }
-            40% { transform: scale(1); }
-        }
-
-        .heart-ring {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border: 2px solid rgba(255, 107, 157, 0.5);
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--tg-blue);
             border-radius: 50%;
-            animation: ringPulse 2s ease-out infinite;
-        }
-        .heart-ring:nth-child(2) { animation-delay: 0.5s; }
-        .heart-ring:nth-child(3) { animation-delay: 1s; }
-
-        @keyframes ringPulse {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
+            animation: spin 1s linear infinite;
         }
 
-        /* ============================================
-           MAIN QUESTION TEXT
-           ============================================ */
-        .question-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .pre-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 28px;
-            color: var(--light-pink);
-            margin-bottom: 15px;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards;
-            animation-delay: 0.3s;
-        }
-
-        .main-question {
-            font-family: 'Great Vibes', cursive;
-            font-size: 72px;
-            background: linear-gradient(135deg, 
-                var(--romantic-red) 0%, 
-                var(--primary-pink) 50%, 
-                var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-            text-shadow: none;
-            filter: drop-shadow(0 2px 10px rgba(255, 107, 157, 0.3));
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards, shimmer 3s ease-in-out infinite;
-            animation-delay: 0.6s, 0.6s;
-        }
-
-        .sub-text {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 20px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards;
-            animation-delay: 0.9s;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Loading State */
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-chat) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
         }
 
         @keyframes shimmer {
-            0%, 100% { filter: drop-shadow(0 2px 10px rgba(255, 107, 157, 0.3)); }
-            50% { filter: drop-shadow(0 5px 25px rgba(255, 107, 157, 0.6)); }
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        /* ============================================
-           DECORATIVE ELEMENTS
-           ============================================ */
-        .decorative-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards;
-            animation-delay: 1.2s;
+        /* Responsive */
+        @media (min-width: 481px) {
+            body {
+                background: var(--bg-chat);
+            }
+            .main-content {
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            }
         }
 
-        .line {
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
         }
 
-        .line-heart {
-            color: var(--primary-pink);
-            font-size: 16px;
+        /* Focus styles */
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--tg-blue);
+            outline-offset: 2px;
         }
 
-        /* ============================================
-           BUTTONS CONTAINER
-           ============================================ */
-        .buttons-container {
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            position: relative;
-            min-height: 100px;
-        }
-
-        /* ============================================
-           YES BUTTON STYLES
-           ============================================ */
-        .btn-yes {
-            position: relative;
-            padding: 20px 60px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(135deg, 
-                var(--romantic-red) 0%, 
-                var(--primary-pink) 50%, 
-                var(--secondary-pink) 100%);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 
-                0 10px 30px rgba(255, 77, 109, 0.4),
-                0 0 0 0 rgba(255, 107, 157, 0.5);
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards, buttonPulse 2s ease-in-out infinite;
-            animation-delay: 1.5s, 1.5s;
-            z-index: 10;
-        }
-
-        @keyframes buttonPulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4), 0 0 0 0 rgba(255, 107, 157, 0.5); }
-            50% { box-shadow: 0 15px 40px rgba(255, 77, 109, 0.5), 0 0 0 15px rgba(255, 107, 157, 0); }
-        }
-
-        .btn-yes:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.5), 0 0 30px rgba(255, 107, 157, 0.3);
-        }
-
-        .btn-yes:active { transform: translateY(-2px) scale(1.02); }
-
-        .btn-yes::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-
-        /* ============================================
-           NO BUTTON - THE ROAMER (Fixed Position)
-           ============================================ */
-        .btn-no {
-            /* Fixed position allows it to roam the whole screen */
-            position: fixed; 
-            padding: 18px 50px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-dark);
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            z-index: 100;
-            /* Transition for smooth movement */
-            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            /* Initial position logic handled by JS */
-            top: 50%;
-            left: 50%;
-            transform: translate(50px, 0);
-            opacity: 0; /* Start hidden, fade in via JS */
-        }
-
-        .btn-no:hover { background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); }
-
-        /* ============================================
-           FUNNY MESSAGE POPUP
-           ============================================ */
-        .funny-message {
-            position: fixed;
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-radius: 15px;
-            font-size: 14px;
-            pointer-events: none;
-            z-index: 200;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 250px;
-            text-align: center;
-        }
-        .funny-message.show { opacity: 1; transform: scale(1); }
-
-        /* ============================================
-           SUCCESS SCREEN - After Yes
-           ============================================ */
-        .success-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1000;
+        /* Screen containers */
+        .screen {
             display: none;
-            align-items: center; justify-content: center;
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.95) 0%, rgba(255, 143, 171, 0.95) 50%, rgba(224, 170, 255, 0.95) 100%);
-            animation: successFadeIn 0.5s ease-out forwards;
         }
 
-        @keyframes successFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .success-content {
-            text-align: center;
-            padding: 40px;
-            animation: successBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-        }
-
-        @keyframes successBounce {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .success-hearts {
-            font-size: 120px;
-            margin-bottom: 30px;
-            animation: floatHearts 2s ease-in-out infinite;
-        }
-
-        @keyframes floatHearts {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.1); }
-        }
-
-        .success-title {
-            font-family: 'Great Vibes', cursive;
-            font-size: 72px;
-            color: white;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .success-message {
-            font-family: 'Poppins', sans-serif;
-            font-size: 24px;
-            color: white;
-            font-weight: 300;
-            line-height: 1.8;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .success-message .highlight {
-            font-weight: 600;
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-
-        .success-hearts-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .success-hearts-row span {
-            font-size: 40px;
-            animation: heartPop 0.5s ease-out forwards;
-            opacity: 0;
-        }
-        .success-hearts-row span:nth-child(1) { animation-delay: 0.2s; }
-        .success-hearts-row span:nth-child(2) { animation-delay: 0.4s; }
-        .success-hearts-row span:nth-child(3) { animation-delay: 0.6s; }
-        .success-hearts-row span:nth-child(4) { animation-delay: 0.8s; }
-        .success-hearts-row span:nth-child(5) { animation-delay: 1s; }
-
-        @keyframes heartPop {
-            0% { opacity: 0; transform: scale(0) rotate(-30deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
-        }
-
-        /* ============================================
-           CELEBRATION PARTICLES
-           ============================================ */
-        .celebration-particle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1001;
-            animation: particleFall var(--fall-duration) linear forwards;
-        }
-
-        @keyframes particleFall {
-            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
-            100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
-        }
-
-        /* ============================================
-           RESPONSIVE DESIGN
-           ============================================ */
-        @media (max-width: 768px) {
-            .decorative-frame { padding: 40px 25px; margin: 15px; }
-            .main-question { font-size: 48px; }
-            .pre-text { font-size: 22px; }
-            .sub-text { font-size: 16px; }
-            .btn-yes { padding: 16px 40px; font-size: 20px; }
-            .btn-no { padding: 14px 35px; font-size: 16px; }
-            .main-heart { font-size: 70px; }
-            .success-title { font-size: 48px; }
-            .success-message { font-size: 18px; padding: 0 20px; }
-            .success-hearts { font-size: 80px; }
-            .corner-decoration { width: 50px; height: 50px; }
-        }
-
-        @media (max-width: 480px) {
-            .main-question { font-size: 36px; }
-            .buttons-container { flex-direction: column; gap: 20px; }
-            /* Note: No button is fixed, so it won't stack */
-            .success-title { font-size: 36px; }
-            .success-message { font-size: 16px; }
+        .screen.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-
-    <!-- Background Layer -->
-    <div class="background-layer">
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
-        <div class="gradient-orb orb-3"></div>
-    </div>
-
-    <!-- Stars Container -->
-    <div class="stars-container" id="starsContainer"></div>
-
-    <!-- Floating Hearts Container -->
-    <div class="hearts-container" id="heartsContainer"></div>
-
-    <!-- Sparkle Container -->
-    <div class="sparkle-container" id="sparkleContainer"></div>
+    <!-- Header -->
+    <header class="tg-header">
+        <div class="tg-header-content">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="bot-avatar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            </div>
+            <div class="bot-info">
+                <div class="bot-name">
+                    NokoStoreBot
+                    <span class="verified-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                </div>
+                <div class="bot-status" id="botStatus">Online</div>
+            </div>
+            <button class="back-btn" onclick="showMenu()" aria-label="Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </button>
+        </div>
+    </header>
 
     <!-- Main Content -->
-    <div class="main-wrapper">
-        <div class="decorative-frame">
-            <!-- Corner Decorations -->
-            <div class="corner-decoration corner-top-left"><svg viewBox="0 0 80 80" fill="none"><path d="M0 0 L80 0 L80 10 L10 10 L10 80 L0 80 Z" fill="rgba(255,107,157,0.3)"/><circle cx="20" cy="20" r="4" fill="rgba(255,107,157,0.6)"/><circle cx="35" cy="20" r="2" fill="rgba(255,107,157,0.4)"/><circle cx="20" cy="35" r="2" fill="rgba(255,107,157,0.4)"/></svg></div>
-            <div class="corner-decoration corner-top-right"><svg viewBox="0 0 80 80" fill="none"><path d="M0 0 L80 0 L80 10 L10 10 L10 80 L0 80 Z" fill="rgba(255,107,157,0.3)"/><circle cx="20" cy="20" r="4" fill="rgba(255,107,157,0.6)"/><circle cx="35" cy="20" r="2" fill="rgba(255,107,157,0.4)"/><circle cx="20" cy="35" r="2" fill="rgba(255,107,157,0.4)"/></svg></div>
-            <div class="corner-decoration corner-bottom-left"><svg viewBox="0 0 80 80" fill="none"><path d="M0 0 L80 0 L80 10 L10 10 L10 80 L0 80 Z" fill="rgba(255,107,157,0.3)"/><circle cx="20" cy="20" r="4" fill="rgba(255,107,157,0.6)"/></svg></div>
-            <div class="corner-decoration corner-bottom-right"><svg viewBox="0 0 80 80" fill="none"><path d="M0 0 L80 0 L80 10 L10 10 L10 80 L0 80 Z" fill="rgba(255,107,157,0.3)"/><circle cx="20" cy="20" r="4" fill="rgba(255,107,157,0.6)"/></svg></div>
-
-            <!-- Main Heart -->
-            <div class="main-heart-container">
-                <div class="heart-ring"></div>
-                <div class="heart-ring"></div>
-                <div class="heart-ring"></div>
-                <div class="main-heart">💖</div>
+    <main class="main-content" style="padding-bottom: 70px;">
+        
+        <!-- Home Screen -->
+        <div class="screen active" id="homeScreen">
+            <!-- Bot Profile -->
+            <div class="bot-profile">
+                <div class="bot-avatar-large">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h1 class="bot-name-large">
+                    NokoStoreBot
+                    <span class="verified-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                </h1>
+                <p class="bot-username">@nokostorebot</p>
+                <p class="bot-bio">Layanan OTP terpercaya dengan harga termurah. Tersedia nomor dari berbagai negara untuk verifikasi WhatsApp, Telegram, Instagram, dan lainnya.</p>
             </div>
 
-            <!-- Question Section -->
-            <div class="question-section">
-                <p class="pre-text">Hey there, beautiful soul...</p>
-                <h1 class="main-question">Will You Be My Girlfriend?</h1>
-                <p class="sub-text">I promise to love you with all my heart 💕</p>
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">15K+</div>
+                    <div class="stat-label">Total Order</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">99.5%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
             </div>
 
-            <!-- Decorative Line -->
-            <div class="decorative-line">
-                <div class="line"></div>
-                <span class="line-heart">♥</span>
-                <div class="line"></div>
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-label">Saldo Anda</div>
+                <div class="balance-amount" id="userBalance">Rp 0</div>
+                <div class="balance-actions">
+                    <button class="balance-btn balance-btn-deposit" onclick="openModal('depositModal')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Deposit
+                    </button>
+                    <button class="balance-btn balance-btn-history" onclick="switchScreen('historyScreen')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Riwayat
+                    </button>
+                </div>
             </div>
 
-            <!-- Buttons (Only Yes is inside the flow now) -->
-            <div class="buttons-container">
-                <button class="btn-yes" id="btnYes" onclick="handleYes()">
-                    <span class="heart-icon" style="margin-right: 10px; display: inline-block; animation: smallHeartBeat 1s infinite;">💕</span>
-                    Yes, I Will!
+            <!-- Quick Actions -->
+            <div class="menu-section">
+                <div class="section-header">Menu Utama</div>
+                <div class="menu-item" onclick="switchScreen('orderScreen')">
+                    <div class="menu-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Pesan Nomor</div>
+                        <div class="menu-subtitle">Order nomor OTP untuk verifikasi</div>
+                    </div>
+                    <div class="menu-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="switchScreen('activeScreen')">
+                    <div class="menu-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Nomor Aktif</div>
+                        <div class="menu-subtitle">Lihat nomor yang sedang aktif</div>
+                    </div>
+                    <span class="menu-badge" id="activeBadge">3</span>
+                </div>
+                <div class="menu-item" onclick="switchScreen('servicesScreen')">
+                    <div class="menu-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Layanan Tersedia</div>
+                        <div class="menu-subtitle">WhatsApp, Telegram, Instagram...</div>
+                    </div>
+                    <div class="menu-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="switchScreen('apiScreen')">
+                    <div class="menu-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">API Integration</div>
+                        <div class="menu-subtitle">Dokumentasi API untuk developer</div>
+                    </div>
+                    <div class="menu-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Preview -->
+            <div class="section-header">Preview Chat Bot</div>
+            <div class="chat-section">
+                <div class="chat-bubble bubble-bot">
+                    Selamat datang di NokoStoreBot!
+                    <span class="bubble-time">10:30</span>
+                </div>
+                <div class="chat-bubble bubble-bot">
+                    Silakan pilih layanan yang Anda butuhkan:
+                    <span class="bubble-time">10:30</span>
+                </div>
+                <div class="chat-bubble bubble-user">
+                    /order whatsapp indonesia
+                    <span class="bubble-time">10:31</span>
+                </div>
+                <div class="chat-bubble bubble-bot">
+                    Nomor berhasil dipesan!
+                    +62812-3456-7890
+                    OTP: 847291
+                    <span class="bubble-time">10:32</span>
+                </div>
+            </div>
+
+            <!-- Inline Keyboard Preview -->
+            <div class="inline-keyboard">
+                <div class="keyboard-row">
+                    <button class="keyboard-btn keyboard-btn-primary" onclick="switchScreen('orderScreen')">Pesan Nomor</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="keyboard-btn keyboard-btn-default" onclick="switchScreen('servicesScreen')">Layanan</button>
+                    <button class="keyboard-btn keyboard-btn-default" onclick="switchScreen('historyScreen')">Riwayat</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="keyboard-btn keyboard-btn-default">Bantuan</button>
+                    <button class="keyboard-btn keyboard-btn-default">Deposit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Screen -->
+        <div class="screen" id="orderScreen">
+            <div class="section-header">Pilih Layanan</div>
+            <div class="services-grid" id="servicesGrid">
+                <!-- Services will be populated by JS -->
+            </div>
+
+            <div class="modal-body" id="orderForm" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Layanan Dipilih</label>
+                    <div class="order-status" id="selectedServiceInfo"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pilih Negara</label>
+                    <div class="country-list" id="countryList">
+                        <!-- Countries will be populated by JS -->
+                    </div>
+                </div>
+                <div class="form-group" id="priceInfo" style="display: none;">
+                    <label class="form-label">Detail Harga</label>
+                    <div class="order-status" id="priceDetails"></div>
+                </div>
+                <button class="btn-tg btn-tg-primary" style="width: 100%;" onclick="processOrder()" id="orderBtn">
+                    Pesan Sekarang
                 </button>
-                <!-- No button is moved outside via JS but lives here initially in DOM -->
             </div>
+        </div>
 
-            <!-- Love Notes -->
-            <div class="love-notes" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap;">
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 20px; font-size: 14px; color: var(--light-pink); opacity: 0; animation: fadeInUp 0.8s 2s forwards;">💕 Forever Yours</div>
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 20px; font-size: 14px; color: var(--light-pink); opacity: 0; animation: fadeInUp 0.8s 2.2s forwards;">✨ My Everything</div>
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 20px; font-size: 14px; color: var(--light-pink); opacity: 0; animation: fadeInUp 0.8s 2.4s forwards;">💖 My World</div>
+        <!-- Active Numbers Screen -->
+        <div class="screen" id="activeScreen">
+            <div class="section-header">Nomor Aktif</div>
+            <div id="activeNumbersList">
+                <!-- Active numbers will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- Services Screen -->
+        <div class="screen" id="servicesScreen">
+            <div class="section-header">Semua Layanan</div>
+            <div class="services-grid" id="allServicesGrid">
+                <!-- All services will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- History Screen -->
+        <div class="screen" id="historyScreen">
+            <div class="section-header">Riwayat Transaksi</div>
+            <div class="transaction-list" id="transactionList">
+                <!-- Transactions will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- API Screen -->
+        <div class="screen" id="apiScreen">
+            <div class="section-header">API Documentation</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">API Key Anda</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" class="form-input" value="sk_live_xxxxxxxxxxxxx" readonly>
+                        <button class="btn-tg btn-tg-secondary" onclick="copyToClipboard('sk_live_xxxxxxxxxxxxx')">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Endpoint Base URL</label>
+                    <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px;">
+                        https://api.nokostore.com/v1
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">GET /balance</label>
+                    <div style="background: #1E1E1E; color: #D4D4D4; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto;">
+<pre>curl -X GET \
+  "https://api.nokostore.com/v1/balance" \
+  -H "Authorization: Bearer API_KEY"</pre>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">POST /order</label>
+                    <div style="background: #1E1E1E; color: #D4D4D4; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto;">
+<pre>curl -X POST \
+  "https://api.nokostore.com/v1/order" \
+  -H "Authorization: Bearer API_KEY" \
+  -d "service=whatsapp" \
+  -d "country=ID"</pre>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">GET /check/{order_id}</label>
+                    <div style="background: #1E1E1E; color: #D4D4D4; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; overflow-x: auto;">
+<pre>curl -X GET \
+  "https://api.nokostore.com/v1/check/ORD12345" \
+  -H "Authorization: Bearer API_KEY"</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchScreen('homeScreen')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="switchScreen('orderScreen')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <span class="nav-label">Order</span>
+        </div>
+        <div class="nav-item" onclick="switchScreen('activeScreen')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span class="nav-label">Active</span>
+        </div>
+        <div class="nav-item" onclick="switchScreen('historyScreen')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="nav-label">History</span>
+        </div>
+    </nav>
+
+    <!-- Deposit Modal -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-content">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">Deposit Saldo</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Metode Pembayaran</label>
+                    <select class="form-select" id="depositMethod">
+                        <option value="qris">QRIS (All E-Wallet)</option>
+                        <option value="dana">DANA</option>
+                        <option value="ovo">OVO</option>
+                        <option value="gopay">GoPay</option>
+                        <option value="bank">Transfer Bank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah Deposit</label>
+                    <input type="number" class="form-input" placeholder="Minimal Rp 10.000" id="depositAmount">
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <button class="btn-tg btn-tg-secondary" style="flex: 1; min-width: 70px;" onclick="setDepositAmount(10000)">10K</button>
+                    <button class="btn-tg btn-tg-secondary" style="flex: 1; min-width: 70px;" onclick="setDepositAmount(25000)">25K</button>
+                    <button class="btn-tg btn-tg-secondary" style="flex: 1; min-width: 70px;" onclick="setDepositAmount(50000)">50K</button>
+                    <button class="btn-tg btn-tg-secondary" style="flex: 1; min-width: 70px;" onclick="setDepositAmount(100000)">100K</button>
+                </div>
+                <button class="btn-tg btn-tg-primary" style="width: 100%;" onclick="processDeposit()">
+                    Lanjutkan Pembayaran
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- The Runaway No Button (Placed here in DOM but will be fixed position) -->
-    <button class="btn-no" id="btnNo">No, Sorry 😅</button>
-
-    <!-- Funny Message -->
-    <div class="funny-message" id="funnyMessage"></div>
-
-    <!-- Success Screen -->
-    <div class="success-screen" id="successScreen">
-        <div class="success-content">
-            <div class="success-hearts">💕</div>
-            <h1 class="success-title">Yay! You Said Yes!</h1>
-            <p class="success-message">
-                Thank you, my love! 💖<br><br>
-                You just made me the <span class="highlight">happiest person</span> in the entire universe! 
-                I promise to cherish every moment with you, to make you smile every single day, 
-                and to love you more than words could ever express. <br><br>
-                <span class="highlight">I knew I could count on you!</span> 💕<br>
-                Let's write our beautiful love story together... 
-            </p>
-            <div class="success-hearts-row">
-                <span>💕</span><span>💖</span><span>💗</span><span>💓</span><span>💞</span>
+    <!-- OTP Modal -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-content">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <h2 class="modal-title">Detail Order</h2>
+            </div>
+            <div class="modal-body">
+                <div class="otp-display" id="otpDisplay">
+                    <div class="otp-label">Kode OTP</div>
+                    <div class="otp-code" id="otpCode">------</div>
+                    <div class="otp-timer">Berlaku selama <span id="otpTimer">20:00</span></div>
+                    <button class="copy-btn" onclick="copyOTP()">Salin OTP</button>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="order-status">
+                        <div class="status-row">
+                            <span class="status-label">ID Order</span>
+                            <span class="status-value" id="modalOrderId">-</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Nomor</span>
+                            <span class="status-value" id="modalNumber">-</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Layanan</span>
+                            <span class="status-value" id="modalService">-</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Status</span>
+                            <span class="status-value success" id="modalStatus">Menunggu OTP</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 16px;">
+                    <button class="btn-tg btn-tg-secondary" style="width: 100%;" onclick="closeModal('otpModal')">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
     <script>
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            createStars();
-            createFloatingHearts();
-            createSparkles();
-            initButtonPosition();
-        });
-
-        // ============================================
-        // CREATE STARS BACKGROUND
-        // ============================================
-        function createStars() {
-            const container = document.getElementById('starsContainer');
-            const starCount = 150;
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 3 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                star.style.setProperty('--delay', (Math.random() * 5) + 's');
-                container.appendChild(star);
-            }
-        }
-
-        // ============================================
-        // CREATE FLOATING HEARTS
-        // ============================================
-        function createFloatingHearts() {
-            const container = document.getElementById('heartsContainer');
-            const hearts = ['💕', '💖', '💗', '💓', '💞', '💝', '❤️', '🩷', '🩵'];
-            const colors = ['#ff6b9d', '#ff8fab', '#ffc2d1', '#e0aaff', '#ffd700'];
-            const heartCount = 30;
-            for (let i = 0; i < heartCount; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'floating-heart';
-                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.setProperty('--size', (Math.random() * 25 + 15) + 'px');
-                heart.style.setProperty('--duration', (Math.random() * 10 + 10) + 's');
-                heart.style.setProperty('--delay', (Math.random() * 15) + 's');
-                heart.style.setProperty('--heart-color', colors[Math.floor(Math.random() * colors.length)]);
-                container.appendChild(heart);
-            }
-        }
-
-        // ============================================
-        // CREATE SPARKLES
-        // ============================================
-        function createSparkles() {
-            const container = document.getElementById('sparkleContainer');
-            const sparkleCount = 50;
-            for (let i = 0; i < sparkleCount; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.top = Math.random() * 100 + '%';
-                sparkle.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                sparkle.style.setProperty('--delay', (Math.random() * 5) + 's');
-                container.appendChild(sparkle);
-            }
-        }
-
-        // ============================================
-        // BUTTON NO - LOGIC & MOVEMENT
-        // ============================================
-        const btnNo = document.getElementById('btnNo');
-        const btnYes = document.getElementById('btnYes');
-        const funnyMessage = document.getElementById('funnyMessage');
-        
-        const funnyTexts = [
-            "Eits, mau kemana? 😏", "Gabisa lho! 💕", "Kamu yakin? 🥺",
-            "Jangan gitu dong... 😢", "Coba lagi! 💖", "Aku gak terima! 😤",
-            "Lari kemana sayang? 🏃", "No-nya lagi ilang! ✨", "Udah takdir kita! 💕",
-            "Jangan ditolak dong! 🥹", "Aku ga mau! 😭", "Please sayang! 💗",
-            "Aku tunggu ya! ⏰", "Kamu gak bisa kabur! 😜", "Aku mengejar cintamu! 💕",
-            "Yakin nolak aku? 🥺", "Aku gak nyerah! 💪", "Love is patient! 💖"
+        // =====================
+        // DATA
+        // =====================
+        const services = [
+            { id: 'wa', name: 'WhatsApp', icon: '💬', color: '#25D366', price: 3500, stock: 150 },
+            { id: 'tg', name: 'Telegram', icon: '✈️', color: '#0088CC', price: 2500, stock: 200 },
+            { id: 'fb', name: 'Facebook', icon: '👤', color: '#1877F2', price: 4000, stock: 120 },
+            { id: 'ig', name: 'Instagram', icon: '📷', color: '#E4405F', price: 4500, stock: 100 },
+            { id: 'tt', name: 'TikTok', icon: '🎵', color: '#000000', price: 3500, stock: 180 },
+            { id: 'tw', name: 'Twitter', icon: '🐦', color: '#1DA1F2', price: 5000, stock: 80 },
+            { id: 'dc', name: 'Discord', icon: '🎮', color: '#5865F2', price: 3000, stock: 160 },
+            { id: 'gg', name: 'Google', icon: '🔍', color: '#4285F4', price: 4000, stock: 90 },
+            { id: 'nf', name: 'Netflix', icon: '🎬', color: '#E50914', price: 8000, stock: 50 },
+            { id: 'sp', name: 'Spotify', icon: '🎧', color: '#1DB954', price: 5000, stock: 70 },
+            { id: 'sn', name: 'Shopee', icon: '🛒', color: '#EE4D2D', price: 3000, stock: 200 },
+            { id: 'lz', name: 'Lazada', icon: '📦', color: '#0F146D', price: 3000, stock: 180 }
         ];
 
-        let attemptCount = 0;
+        const countries = [
+            { code: 'ID', name: 'Indonesia', flag: '🇮🇩', prefix: '+62', multiplier: 1 },
+            { code: 'MY', name: 'Malaysia', flag: '🇲🇾', prefix: '+60', multiplier: 1.2 },
+            { code: 'SG', name: 'Singapore', flag: '🇸🇬', prefix: '+65', multiplier: 1.5 },
+            { code: 'TH', name: 'Thailand', flag: '🇹🇭', prefix: '+66', multiplier: 1.1 },
+            { code: 'VN', name: 'Vietnam', flag: '🇻🇳', prefix: '+84', multiplier: 1.0 },
+            { code: 'PH', name: 'Philippines', flag: '🇵🇭', prefix: '+63', multiplier: 1.1 },
+            { code: 'US', name: 'USA', flag: '🇺🇸', prefix: '+1', multiplier: 2.0 },
+            { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', prefix: '+44', multiplier: 2.2 }
+        ];
 
-        // Set initial position near the Yes button
-        function initButtonPosition() {
-            const rect = btnYes.getBoundingClientRect();
-            // Position to the right of Yes button initially
-            btnNo.style.top = rect.top + 'px';
-            btnNo.style.left = (rect.right + 20) + 'px';
-            btnNo.style.opacity = '1'; // Fade in
+        let userData = {
+            balance: 150000,
+            api_key: 'sk_live_' + Math.random().toString(36).substr(2, 16)
+        };
+
+        let activeOrders = [
+            { id: 'ORD-001', number: '+62812-3456-7890', service: 'WhatsApp', otp: '847291', status: 'success', remaining: 840 },
+            { id: 'ORD-002', number: '+6012-345-6789', service: 'Telegram', otp: null, status: 'waiting', remaining: 1120 },
+            { id: 'ORD-003', number: '+659123-4567', service: 'Instagram', otp: null, status: 'waiting', remaining: 600 }
+        ];
+
+        let transactions = [
+            { id: 1, type: 'out', title: 'Order WhatsApp', date: '10 Jan 2025, 14:30', amount: -3500 },
+            { id: 2, type: 'in', title: 'Deposit via QRIS', date: '10 Jan 2025, 14:00', amount: 100000 },
+            { id: 3, type: 'out', title: 'Order Telegram', date: '09 Jan 2025, 18:45', amount: -2500 },
+            { id: 4, type: 'out', title: 'Order Instagram', date: '09 Jan 2025, 12:20', amount: -4500 },
+            { id: 5, type: 'in', title: 'Deposit via DANA', date: '08 Jan 2025, 09:15', amount: 50000 },
+            { id: 6, type: 'out', title: 'Order TikTok', date: '07 Jan 2025, 21:00', amount: -3500 },
+            { id: 7, type: 'out', title: 'Order Discord', date: '07 Jan 2025, 15:30', amount: -3000 }
+        ];
+
+        let selectedService = null;
+        let selectedCountry = null;
+        let navigationHistory = ['homeScreen'];
+
+        // =====================
+        // INITIALIZATION
+        // =====================
+        function init() {
+            updateBalance();
+            renderServices();
+            renderCountries();
+            renderActiveOrders();
+            renderTransactions();
+            startTimers();
+            simulateOTP();
         }
 
-        // Recalculate position on resize (mobile rotation etc)
-        window.addEventListener('resize', initButtonPosition);
+        // =====================
+        // RENDER FUNCTIONS
+        // =====================
+        function renderServices() {
+            const grid = document.getElementById('servicesGrid');
+            const allGrid = document.getElementById('allServicesGrid');
+            
+            const html = services.map(s => `
+                <div class="service-card ${selectedService?.id === s.id ? 'selected' : ''}" 
+                     onclick="selectService('${s.id}')" 
+                     data-service="${s.id}">
+                    <div class="service-icon" style="background: ${s.color}20; color: ${s.color};">
+                        ${s.icon}
+                    </div>
+                    <div class="service-name">${s.name}</div>
+                    <div class="service-price">Rp ${s.price.toLocaleString()}</div>
+                    <div class="service-stock">${s.stock} tersedia</div>
+                </div>
+            `).join('');
+            
+            if (grid) grid.innerHTML = html;
+            if (allGrid) allGrid.innerHTML = services.map(s => `
+                <div class="service-card" onclick="selectServiceFromList('${s.id}')">
+                    <div class="service-icon" style="background: ${s.color}20; color: ${s.color};">
+                        ${s.icon}
+                    </div>
+                    <div class="service-name">${s.name}</div>
+                    <div class="service-price">Rp ${s.price.toLocaleString()}</div>
+                    <div class="service-stock">${s.stock} tersedia</div>
+                </div>
+            `).join('');
+        }
 
-        function moveNoButton(e) {
-            // Get viewport dimensions
-            const btnWidth = btnNo.offsetWidth;
-            const btnHeight = btnNo.offsetHeight;
-            const maxX = window.innerWidth - btnWidth - 10; // 10px padding
-            const maxY = window.innerHeight - btnHeight - 10;
+        function renderCountries() {
+            const list = document.getElementById('countryList');
+            if (!list) return;
+            
+            list.innerHTML = countries.map(c => `
+                <div class="country-item ${selectedCountry?.code === c.code ? 'selected' : ''}" 
+                     onclick="selectCountry('${c.code}')">
+                    <span class="country-flag">${c.flag}</span>
+                    <div class="country-info">
+                        <div class="country-name">${c.name}</div>
+                        <div class="country-code">${c.prefix}</div>
+                    </div>
+                    <div class="country-price">
+                        ${selectedService ? 'Rp ' + Math.round(selectedService.price * c.multiplier).toLocaleString() : '-'}
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            // Calculate random position
-            let randomX = Math.random() * maxX;
-            let randomY = Math.random() * maxY;
-
-            // Ensure it moves significantly
-            if (Math.abs(randomX - parseInt(btnNo.style.left)) < 100) {
-                randomX = Math.random() * maxX;
+        function renderActiveOrders() {
+            const container = document.getElementById('activeNumbersList');
+            if (!container) return;
+            
+            if (activeOrders.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; opacity: 0.5;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        <p>Belum ada nomor aktif</p>
+                        <button class="btn-tg btn-tg-primary" style="margin-top: 16px;" onclick="switchScreen('orderScreen')">
+                            Pesan Nomor
+                        </button>
+                    </div>
+                `;
+                return;
             }
 
-            // Apply styles
-            btnNo.style.left = randomX + 'px';
-            btnNo.style.top = randomY + 'px';
+            container.innerHTML = activeOrders.map(order => `
+                <div style="background: var(--bg-primary); margin: 12px 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);">
+                    <div style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-weight: 600; font-size: 17px; font-family: monospace;">${order.number}</span>
+                            <span style="background: ${order.status === 'success' ? 'var(--tg-green)' : 'var(--tg-orange)'}; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                                ${order.status === 'success' ? 'OTP Diterima' : 'Menunggu OTP'}
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                            <span>${order.service}</span>
+                            <span>${order.id}</span>
+                        </div>
+                        ${order.otp ? `
+                            <div style="background: linear-gradient(135deg, var(--tg-blue), var(--tg-blue-dark)); border-radius: 8px; padding: 12px; text-align: center; color: white;">
+                                <div style="font-size: 11px; opacity: 0.8;">Kode OTP</div>
+                                <div style="font-size: 24px; font-weight: 700; letter-spacing: 2px; font-family: monospace;">${order.otp}</div>
+                            </div>
+                        ` : `
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary);">
+                                    <div class="spinner"></div>
+                                    <span>Menunggu OTP...</span>
+                                </div>
+                                <span class="countdown" data-seconds="${order.remaining}" style="font-family: monospace; font-weight: 500;">${formatTime(order.remaining)}</span>
+                            </div>
+                        `}
+                        ${order.otp ? `
+                            <button class="btn-tg btn-tg-primary" style="width: 100%; margin-top: 12px;" onclick="copyToClipboard('${order.otp}')">
+                                Salin OTP
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
             
-            // Show funny message
-            showFunnyMessage(randomX, randomY);
+            document.getElementById('activeBadge').textContent = activeOrders.length;
+        }
 
-            // Grow Yes button slightly
-            attemptCount++;
-            const currentScale = 1 + (attemptCount * 0.03);
-            if(currentScale < 1.3) {
-                btnYes.style.transform = `scale(${currentScale})`;
+        function renderTransactions() {
+            const container = document.getElementById('transactionList');
+            if (!container) return;
+            
+            container.innerHTML = transactions.map(t => `
+                <div class="transaction-item">
+                    <div class="transaction-icon ${t.type}">
+                        ${t.type === 'in' ? `
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="19" x2="12" y2="5"></line>
+                                <polyline points="5 12 12 5 19 12"></polyline>
+                            </svg>
+                        ` : `
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                        `}
+                    </div>
+                    <div class="transaction-info">
+                        <div class="transaction-title">${t.title}</div>
+                        <div class="transaction-date">${t.date}</div>
+                    </div>
+                    <div class="transaction-amount ${t.amount > 0 ? 'positive' : 'negative'}">
+                        ${t.amount > 0 ? '+' : ''}Rp ${Math.abs(t.amount).toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =====================
+        // NAVIGATION
+        // =====================
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const navItems = document.querySelectorAll('.nav-item');
+            const screenIndex = ['homeScreen', 'orderScreen', 'activeScreen', 'historyScreen'].indexOf(screenId);
+            if (navItems[screenIndex]) navItems[screenIndex].classList.add('active');
+            
+            navigationHistory.push(screenId);
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop();
+                const prevScreen = navigationHistory[navigationHistory.length - 1];
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(prevScreen).classList.add('active');
             }
         }
 
-        function showFunnyMessage(x, y) {
-            const text = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
-            funnyMessage.textContent = text;
+        // =====================
+        // ORDER FUNCTIONS
+        // =====================
+        function selectService(serviceId) {
+            selectedService = services.find(s => s.id === serviceId);
+            selectedCountry = null;
             
-            // Position message near the button but not overlapping
-            let msgX = x;
-            let msgY = y - 60;
-
-            // Boundary checks for message
-            if (msgY < 0) msgY = 20;
+            renderServices();
+            renderCountries();
             
-            funnyMessage.style.left = msgX + 'px';
-            funnyMessage.style.top = msgY + 'px';
-            funnyMessage.classList.add('show');
-
-            setTimeout(() => {
-                funnyMessage.classList.remove('show');
-            }, 1200);
+            document.getElementById('orderForm').style.display = 'block';
+            document.getElementById('selectedServiceInfo').innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">${selectedService.icon}</span>
+                    <div>
+                        <div style="font-weight: 600;">${selectedService.name}</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Rp ${selectedService.price.toLocaleString()} / nomor</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('priceInfo').style.display = 'none';
         }
 
-        // Event Listeners for No Button
-        // 1. Hover (Desktop)
-        btnNo.addEventListener('mouseenter', moveNoButton);
-        
-        // 2. Touch (Mobile)
-        btnNo.addEventListener('touchstart', function(e) {
-            e.preventDefault(); // prevent mouseemu
-            moveNoButton();
-        }, {passive: false});
+        function selectServiceFromList(serviceId) {
+            switchScreen('orderScreen');
+            setTimeout(() => selectService(serviceId), 100);
+        }
 
-        // 3. Click (Backup)
-        btnNo.addEventListener('click', function(e) {
-            moveNoButton();
+        function selectCountry(countryCode) {
+            selectedCountry = countries.find(c => c.code === countryCode);
+            renderCountries();
+            updatePriceInfo();
+        }
+
+        function updatePriceInfo() {
+            if (!selectedService || !selectedCountry) return;
+            
+            const price = Math.round(selectedService.price * selectedCountry.multiplier);
+            
+            document.getElementById('priceInfo').style.display = 'block';
+            document.getElementById('priceDetails').innerHTML = `
+                <div class="status-row">
+                    <span class="status-label">Layanan</span>
+                    <span class="status-value">${selectedService.name}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Negara</span>
+                    <span class="status-value">${selectedCountry.flag} ${selectedCountry.name}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Harga</span>
+                    <span class="status-value success">Rp ${price.toLocaleString()}</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Saldo Anda</span>
+                    <span class="status-value ${userData.balance >= price ? 'success' : ''}" style="${userData.balance < price ? 'color: var(--tg-red);' : ''}">Rp ${userData.balance.toLocaleString()}</span>
+                </div>
+            `;
+        }
+
+        function processOrder() {
+            if (!selectedService || !selectedCountry) {
+                showToast('Pilih layanan dan negara terlebih dahulu');
+                return;
+            }
+            
+            const price = Math.round(selectedService.price * selectedCountry.multiplier);
+            
+            if (userData.balance < price) {
+                showToast('Saldo tidak mencukupi');
+                openModal('depositModal');
+                return;
+            }
+            
+            // Deduct balance
+            userData.balance -= price;
+            updateBalance();
+            
+            // Create order
+            const orderId = 'ORD-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            const newOrder = {
+                id: orderId,
+                number: selectedCountry.prefix + '8' + Math.floor(Math.random() * 900000000 + 100000000),
+                service: selectedService.name,
+                otp: null,
+                status: 'waiting',
+                remaining: 1200
+            };
+            
+            activeOrders.unshift(newOrder);
+            renderActiveOrders();
+            
+            // Add transaction
+            transactions.unshift({
+                id: Date.now(),
+                type: 'out',
+                title: `Order ${selectedService.name}`,
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                amount: -price
+            });
+            renderTransactions();
+            
+            // Show modal
+            document.getElementById('modalOrderId').textContent = newOrder.id;
+            document.getElementById('modalNumber').textContent = newOrder.number;
+            document.getElementById('modalService').textContent = newOrder.service;
+            document.getElementById('modalStatus').textContent = 'Menunggu OTP';
+            document.getElementById('modalStatus').className = 'status-value pending';
+            document.getElementById('otpCode').textContent = '------';
+            
+            openModal('otpModal');
+            
+            showToast('Order berhasil dibuat!');
+            
+            // Reset selection
+            selectedService = null;
+            selectedCountry = null;
+            document.getElementById('orderForm').style.display = 'none';
+            renderServices();
+        }
+
+        // =====================
+        // DEPOSIT FUNCTIONS
+        // =====================
+        function setDepositAmount(amount) {
+            document.getElementById('depositAmount').value = amount;
+        }
+
+        function processDeposit() {
+            const amount = parseInt(document.getElementById('depositAmount').value);
+            
+            if (!amount || amount < 10000) {
+                showToast('Minimal deposit Rp 10.000');
+                return;
+            }
+            
+            // Simulate deposit
+            userData.balance += amount;
+            updateBalance();
+            
+            transactions.unshift({
+                id: Date.now(),
+                type: 'in',
+                title: `Deposit via ${document.getElementById('depositMethod').options[document.getElementById('depositMethod').selectedIndex].text}`,
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                amount: amount
+            });
+            renderTransactions();
+            
+            closeModal('depositModal');
+            showToast('Deposit berhasil!');
+        }
+
+        // =====================
+        // UTILITY FUNCTIONS
+        // =====================
+        function updateBalance() {
+            document.getElementById('userBalance').textContent = 'Rp ' + userData.balance.toLocaleString();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Berhasil disalin!');
+            });
+        }
+
+        function copyOTP() {
+            const otp = document.getElementById('otpCode').textContent;
+            if (otp && otp !== '------') {
+                copyToClipboard(otp);
+            }
+        }
+
+        // =====================
+        // TIMERS
+        // =====================
+        function startTimers() {
+            setInterval(() => {
+                activeOrders.forEach(order => {
+                    if (order.remaining > 0) {
+                        order.remaining--;
+                    }
+                });
+                
+                // Update countdown displays
+                document.querySelectorAll('.countdown').forEach(el => {
+                    const seconds = parseInt(el.dataset.seconds);
+                    if (seconds > 0) {
+                        el.dataset.seconds = seconds - 1;
+                        el.textContent = formatTime(seconds - 1);
+                    }
+                });
+            }, 1000);
+        }
+
+        // =====================
+        // OTP SIMULATION
+        // =====================
+        function simulateOTP() {
+            setInterval(() => {
+                const waitingOrder = activeOrders.find(o => o.status === 'waiting');
+                if (waitingOrder) {
+                    waitingOrder.otp = Math.floor(100000 + Math.random() * 900000).toString();
+                    waitingOrder.status = 'success';
+                    renderActiveOrders();
+                    
+                    // Update modal if open
+                    if (document.getElementById('otpModal').classList.contains('active')) {
+                        if (document.getElementById('modalOrderId').textContent === waitingOrder.id) {
+                            document.getElementById('otpCode').textContent = waitingOrder.otp;
+                            document.getElementById('modalStatus').textContent = 'OTP Diterima';
+                            document.getElementById('modalStatus').className = 'status-value success';
+                        }
+                    }
+                    
+                    showToast(`OTP diterima untuk ${waitingOrder.id}`);
+                }
+            }, 10000);
+        }
+
+        // =====================
+        // MISC
+        // =====================
+        function showMenu() {
+            showToast('Menu coming soon');
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
         });
 
-        // ============================================
-        // YES BUTTON - SUCCESS
-        // ============================================
-        function handleYes() {
-            const screen = document.getElementById('successScreen');
-            screen.style.display = 'flex';
-            createCelebration();
-        }
-
-        function createCelebration() {
-            const colors = ['#ff6b9d', '#ff8fab', '#ffc2d1', '#e0aaff', '#ffd700', '#ff4d6d', '#ffffff'];
-            const emojis = ['💕', '💖', '💗', '💓', '💞', '✨', '🌟', '💫', '🎉', '🎊'];
-            
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.style.position = 'fixed';
-                    confetti.style.zIndex = '1001';
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.top = '-20px';
-                    confetti.style.fontSize = Math.random() * 20 + 20 + 'px';
-                    confetti.style.opacity = '1';
-                    confetti.style.pointerEvents = 'none';
-                    
-                    if (Math.random() > 0.5) {
-                        // Square confetti
-                        confetti.style.width = '10px';
-                        confetti.style.height = '10px';
-                        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    } else {
-                        // Emoji
-                        confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                    }
-
-                    document.body.appendChild(confetti);
-
-                    // Animation
-                    const duration = Math.random() * 3000 + 2000;
-                    const animation = confetti.animate([
-                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                        { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-                    ], {
-                        duration: duration,
-                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                    });
-
-                    animation.onfinish = () => confetti.remove();
-                }, i * 50);
-            }
-        }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
