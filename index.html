@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NokoStoreBot - Telegram Mini App</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1852,8 +1854,153 @@
             });
         });
 
+
+        // =============================================
+        // TELEGRAM WEBAPP INTEGRATION
+        // =============================================
+        const tg = window.Telegram?.WebApp;
+
+        function initTelegram() {
+            if (!tg) {
+                console.log('Bukan Telegram Mini App - mode preview');
+                return;
+            }
+
+            // Init Telegram WebApp
+            tg.ready();
+            tg.expand(); // Buka full screen
+
+            // Set warna tema dari Telegram
+            const colorScheme = tg.colorScheme;
+            if (colorScheme === 'dark') {
+                document.documentElement.style.setProperty('--bg-primary', '#212121');
+                document.documentElement.style.setProperty('--bg-secondary', '#2c2c2c');
+                document.documentElement.style.setProperty('--bg-chat', '#1a1a1a');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', '#aaaaaa');
+                document.documentElement.style.setProperty('--border-color', '#333333');
+                document.documentElement.style.setProperty('--bubble-in', '#2c2c2c');
+                document.documentElement.style.setProperty('--bubble-out', '#2b5278');
+            }
+
+            // Ambil data user dari Telegram
+            const user = tg.initDataUnsafe?.user;
+            if (user) {
+                const namaUser = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                const usernameUser = user.username ? '@' + user.username : 'Pengguna';
+
+                // Update tampilan nama user di UI
+                const elNama = document.getElementById('userName');
+                const elUsername = document.getElementById('userUsername');
+                if (elNama) elNama.textContent = namaUser;
+                if (elUsername) elUsername.textContent = usernameUser;
+            }
+
+            // Tombol Back Telegram (pojok kiri atas native)
+            tg.BackButton.onClick(() => {
+                if (navigationHistory.length > 1) {
+                    goBack();
+                } else {
+                    tg.close();
+                }
+            });
+
+            // Update tampilan BackButton
+            const origSwitchScreen = switchScreen;
+            window.switchScreen = function(screenId) {
+                origSwitchScreen(screenId);
+                if (navigationHistory.length > 1) {
+                    tg.BackButton.show();
+                } else {
+                    tg.BackButton.hide();
+                }
+            };
+
+            // MainButton Telegram (tombol besar bawah native)
+            tg.MainButton.setParams({
+                text: '🛒 Order Sekarang',
+                color: '#2AABEE',
+                text_color: '#FFFFFF',
+                is_active: true,
+                is_visible: true,
+            });
+
+            tg.MainButton.onClick(() => {
+                switchScreen('orderScreen');
+            });
+
+            // Kirim data ke bot saat order berhasil
+            window.sendOrderToBot = function(orderData) {
+                if (tg.sendData) {
+                    tg.sendData(JSON.stringify({
+                        action: 'order',
+                        service: orderData.service,
+                        country: orderData.country,
+                        price: orderData.price,
+                    }));
+                }
+            };
+
+            // Kirim data ke bot saat deposit
+            window.sendDepositToBot = function(amount, method) {
+                if (tg.sendData) {
+                    tg.sendData(JSON.stringify({
+                        action: 'deposit',
+                        amount: amount,
+                        method: method,
+                    }));
+                }
+            };
+
+            // Hapus header custom (pakai header native Telegram)
+            const header = document.querySelector('.tg-header');
+            if (header) header.style.display = 'none';
+
+            // Sesuaikan tinggi konten
+            document.querySelector('.main-content').style.minHeight = tg.viewportHeight + 'px';
+            tg.onEvent('viewportChanged', () => {
+                document.querySelector('.main-content').style.minHeight = tg.viewportHeight + 'px';
+            });
+
+            console.log('[TG Mini App] Berhasil diinisialisasi!');
+        }
+
+        // Patch processOrder untuk kirim ke bot
+        const _origProcessOrder = processOrder;
+        function processOrder() {
+            if (!selectedService || !selectedCountry) {
+                showToast('Pilih layanan dan negara terlebih dahulu');
+                return;
+            }
+            const price = Math.round(selectedService.price * selectedCountry.multiplier);
+            if (userData.balance < price) {
+                showToast('Saldo tidak mencukupi');
+                openModal('depositModal');
+                return;
+            }
+            if (window.sendOrderToBot) {
+                sendOrderToBot({
+                    service: selectedService.name,
+                    country: selectedCountry.name,
+                    price: price,
+                });
+            }
+            _origProcessOrder();
+        }
+
+        // Patch processDeposit untuk kirim ke bot
+        const _origProcessDeposit = processDeposit;
+        function processDeposit() {
+            const amount = parseInt(document.getElementById('depositAmount').value);
+            const method = document.getElementById('depositMethod').options[document.getElementById('depositMethod').selectedIndex].text;
+            if (window.sendDepositToBot && amount >= 10000) {
+                sendDepositToBot(amount, method);
+            }
+            _origProcessDeposit();
+        }
+
         // Initialize
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => { init(); initTelegram(); });
     </script>
 </body>
 </html>
